@@ -211,11 +211,10 @@ def build_final_tile_prompt(tile_subject, tile_contents, color_palette, tile_typ
         f"IMPORTANT RULES:\n"
         f"- Use {color_palette}\n"
         f"- Add {tile_contents}\n"
-        f"- Ensure texture fades naturally at edges for seamless tiling\n"
-        f"The final result should look like a natural {tile_type} texture that tiles seamlessly."
+        f"- Ensure {tile_subject} texture fades naturally at edges for seamless tiling\n"
     )
 
-def process_tile_to_pixel_art(input_image, base_name, method="simple", pixel_size="medium"):
+def process_tile_to_pixel_art(input_image, base_name, method="advanced", pixel_size="large", grid_size=None):
     """
     Process a generated tile image into pixel art.
     
@@ -223,7 +222,8 @@ def process_tile_to_pixel_art(input_image, base_name, method="simple", pixel_siz
         input_image: PIL Image object of the generated tile
         base_name: Base name for the output file
         method: Processing method - "simple" for grid only, "advanced" for full processing
-        pixel_size: Size of pixels - "small" (8x8), "medium" (16x16), or "large" (32x32)
+        pixel_size: Size of pixels - "small" (8x8), "medium" (16x16), "large" (32x32), or "custom"
+        grid_size: Custom grid size (integer) to use when pixel_size is "custom"
         
     Returns:
         Path to the processed pixel art file
@@ -233,23 +233,30 @@ def process_tile_to_pixel_art(input_image, base_name, method="simple", pixel_siz
     input_image.save(raw_output)
     
     # Determine grid size based on pixel_size parameter
-    if pixel_size == "small":
-        grid_size = 8
+    if grid_size is not None:
+        # Use custom grid size if provided
+        grid_size_value = grid_size
+        size_label = f"{grid_size_value}x{grid_size_value}"
+        print(f"Using custom grid size: {grid_size_value}x{grid_size_value}")
+    elif pixel_size == "small":
+        grid_size_value = 8
         size_label = "8x8"
     elif pixel_size == "medium":
-        grid_size = 16
+        grid_size_value = 16
         size_label = "16x16"
     elif pixel_size == "large":
-        grid_size = 32
+        grid_size_value = 32
         size_label = "32x32"
     else:
-        grid_size = 16  # Default
+        # Default to medium if unrecognized
+        grid_size_value = 16  
         size_label = "16x16"
+        print(f"Unrecognized pixel size '{pixel_size}', defaulting to medium (16x16)")
     
     # Create a temporary processor with the specified grid size
     temp_processor = SeamlessTileProcessor(
         num_colors=16,
-        grid_size=grid_size,
+        grid_size=grid_size_value,
         scale_factor=1,
         force_16x16=False
     )
@@ -271,7 +278,7 @@ def process_tile_to_pixel_art(input_image, base_name, method="simple", pixel_siz
         print(f"Applying advanced pixel art processing with {size_label} pixels...")
         
         # Override the grid_size in the processor
-        temp_processor.grid_size = grid_size
+        temp_processor.grid_size = grid_size_value
         
         # Full processing with color quantization and seamless enhancement
         pixel_art = temp_processor.process_texture(
@@ -445,10 +452,19 @@ def identify_terrain_types(game_description, game_theme):
     # Take exactly 3 terrain types
     return terrain_types[:3]
 
-def generate_terrains_for_game(game_description, game_theme, method="advanced", pixel_size="medium", generate_pixel_art=True, terrain_type=None):
+def generate_terrains_for_game(game_description, game_theme, method="advanced", pixel_size="large", generate_pixel_art=True, terrain_type=None, grid_size=None):
     """
     Identifies and generates 3 ground texture tiles based on game description and theme.
     Returns a list of output filenames and their descriptions.
+    
+    Args:
+        game_description: Description of the game
+        game_theme: Theme of the game
+        method: Processing method - "simple" or "advanced"
+        pixel_size: Size of pixels - "small" (8x8), "medium" (16x16), "large" (32x32), or "custom"
+        generate_pixel_art: Whether to generate pixel art versions
+        terrain_type: Optional specific terrain type to generate
+        grid_size: Custom grid size (integer) to use when pixel_size is "custom"
     """
     print(f"Game Description: {game_description}")
     print(f"Game Theme: {game_theme}")
@@ -486,7 +502,8 @@ def generate_terrains_for_game(game_description, game_theme, method="advanced", 
                     image, 
                     base_name, 
                     method=method,
-                    pixel_size=pixel_size
+                    pixel_size=pixel_size,
+                    grid_size=grid_size
                 )
                 pixel_art_files.append(pixel_art_filename)
         else:
@@ -571,8 +588,9 @@ def main():
     terrain_parser.add_argument("--no-pixel-art", action="store_true", help="Skip pixel art generation")
     terrain_parser.add_argument("--method", choices=["simple", "advanced"], default="advanced", 
                                help="Pixel art processing method - simple (grid only) or advanced (with color quantization)")
-    terrain_parser.add_argument("--pixel-size", choices=["small", "medium", "large"], default="medium",
-                               help="Size of pixels - small (8x8), medium (16x16), or large (32x32)")
+    terrain_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="large",
+                               help="Size of pixels - small (8x8), medium (16x16), large (32x32), or custom")
+    terrain_parser.add_argument("--grid-size", type=int, help="Custom grid size (integer) to use when pixel-size is 'custom'")
     terrain_parser.add_argument("--seed", type=int, help="Seed for consistent variations")
     
     # Subparser for game-based generation
@@ -584,8 +602,9 @@ def main():
     game_parser.add_argument("--no-pixel-art", action="store_true", help="Skip pixel art generation")
     game_parser.add_argument("--method", choices=["simple", "advanced"], default="advanced",
                             help="Pixel art processing method - simple (grid only) or advanced (with color quantization)")
-    game_parser.add_argument("--pixel-size", choices=["small", "medium", "large"], default="medium",
-                            help="Size of pixels - small (8x8), medium (16x16), or large (32x32)")
+    game_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="large",
+                            help="Size of pixels - small (8x8), medium (16x16), large (32x32), or custom")
+    game_parser.add_argument("--grid-size", type=int, help="Custom grid size (integer) to use when pixel-size is 'custom'")
     
     args = parser.parse_args()
     
@@ -607,7 +626,8 @@ def main():
                     image, 
                     base_name, 
                     method=args.method,
-                    pixel_size=args.pixel_size
+                    pixel_size=args.pixel_size,
+                    grid_size=args.grid_size
                 )
                 print(f"Generated pixel art version: {pixel_art_filename}")
         else:
@@ -647,7 +667,8 @@ def main():
                             image, 
                             base_name, 
                             method=args.method,
-                            pixel_size=args.pixel_size
+                            pixel_size=args.pixel_size,
+                            grid_size=args.grid_size
                         )
                         all_pixel_art_files.append(pixel_art_filename)
                 else:

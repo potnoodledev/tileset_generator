@@ -362,7 +362,7 @@ def inpaint_boundary_getimg(composite_image, inpaint_mask, primary_name, seconda
         print(f"Error in inpainting: {e}")
         return None
 
-def pixelate_tileset(input_dir, output_dir, pixel_size="medium", method="advanced", grid_size=None):
+def pixelate_tileset(input_dir, output_dir, pixel_size="large", method="advanced", grid_size=None):
     """
     Apply pixelation to all tiles in a directory using the SeamlessTileProcessor.
     
@@ -449,7 +449,7 @@ def pixelate_tileset(input_dir, output_dir, pixel_size="medium", method="advance
 def generate_tileset(primary_texture_path, secondary_texture_path, mask_dir, 
                      primary_name=None, secondary_name=None,
                      output_dir=FINAL_TILESET_DIR,
-                     apply_pixelation=False, pixel_size="medium", method="advanced",
+                     apply_pixelation=False, pixel_size="large", method="advanced",
                      line_width=10, theme_name="custom", grid_size=None):
     """
     Generate a complete tileset by combining two texture images with masked inpainting.
@@ -545,7 +545,7 @@ def generate_tileset(primary_texture_path, secondary_texture_path, mask_dir,
 def generate_single_texture_tileset(base_texture_path, mask_dir, 
                             base_name=None, target_name=None,
                             output_dir=FINAL_TILESET_DIR,
-                            apply_pixelation=False, pixel_size="medium", method="advanced",
+                            apply_pixelation=False, pixel_size="large", method="advanced",
                             line_width=10, theme_name="custom", grid_size=None):
     """
     Generate a tileset using a single base texture and inpainting for transitions.
@@ -771,7 +771,7 @@ def generate_single_texture_tileset(base_texture_path, mask_dir,
 def blend_textures(texture1_path, texture2_path, mask_dir, 
                   output_dir=FINAL_TILESET_DIR,
                   texture1_name=None, texture2_name=None,
-                  apply_pixelation=False, pixel_size="medium", method="advanced",
+                  apply_pixelation=False, pixel_size="large", method="advanced",
                   boundary_width=20, theme_name=None, grid_size=None, mask_file=None):
     """
     Create a specialized tileset blending any two textures with AI inpainting
@@ -1080,7 +1080,7 @@ if __name__ == "__main__":
     
     # Pixelation options for dual mode
     dual_parser.add_argument("--pixelate", action="store_true", help="Apply pixelation to final tiles")
-    dual_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="medium",
+    dual_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="large",
                        help="Size of pixels - small (8x8), medium (16x16), large (32x32), or custom")
     dual_parser.add_argument("--grid-size", type=int, help="Custom grid size (when pixel-size is 'custom')")
     dual_parser.add_argument("--method", choices=["simple", "advanced"], default="advanced",
@@ -1100,7 +1100,7 @@ if __name__ == "__main__":
     
     # Pixelation options for single mode
     single_parser.add_argument("--pixelate", action="store_true", help="Apply pixelation to final tiles")
-    single_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="medium",
+    single_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="large",
                        help="Size of pixels - small (8x8), medium (16x16), large (32x32), or custom")
     single_parser.add_argument("--grid-size", type=int, help="Custom grid size (when pixel-size is 'custom')")
     single_parser.add_argument("--method", choices=["simple", "advanced"], default="advanced",
@@ -1122,7 +1122,7 @@ if __name__ == "__main__":
     
     # Pixelation options for blend mode
     blend_parser.add_argument("--pixelate", action="store_true", help="Apply pixelation to final tiles")
-    blend_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="medium",
+    blend_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="large",
                        help="Size of pixels - small (8x8), medium (16x16), large (32x32), or custom")
     blend_parser.add_argument("--grid-size", type=int, help="Custom grid size (when pixel-size is 'custom')")
     blend_parser.add_argument("--method", choices=["simple", "advanced"], default="advanced",
@@ -1132,7 +1132,7 @@ if __name__ == "__main__":
     pixelate_parser = subparsers.add_parser("pixelate", help="Apply pixelation to existing tiles")
     pixelate_parser.add_argument("input_dir", help="Path to the directory containing tiles to pixelate")
     pixelate_parser.add_argument("output_dir", help="Path to save the pixelated tiles")
-    pixelate_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="medium",
+    pixelate_parser.add_argument("--pixel-size", choices=["small", "medium", "large", "custom"], default="large",
                        help="Size of pixels - small (8x8), medium (16x16), large (32x32), or custom")
     pixelate_parser.add_argument("--grid-size", type=int, help="Custom grid size (when pixel-size is 'custom')")
     pixelate_parser.add_argument("--method", choices=["simple", "advanced"], default="advanced",
@@ -1207,7 +1207,7 @@ if __name__ == "__main__":
                 None,  # secondary_name
                 FINAL_TILESET_DIR,  # output_dir
                 False,  # pixelate
-                "medium",  # pixel_size
+                "large",  # pixel_size
                 "advanced",  # method
                 10,  # line_width
                 "custom"  # theme_name

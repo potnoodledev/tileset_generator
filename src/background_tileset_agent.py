@@ -105,9 +105,9 @@ def generate_tileset_blends(base_tile_paths, mask_dir="masks"):
                 texture1_name=texture1_name,
                 texture2_name=texture2_name,
                 apply_pixelation=True,
-                pixel_size="custom",
+                pixel_size="large",
                 method="advanced",
-                grid_size=8,  # Changed from 6 to 8 for larger pixel size
+                grid_size=32,
                 theme_name=theme_name
             )
             
