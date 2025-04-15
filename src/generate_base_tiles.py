@@ -451,10 +451,14 @@ def identify_terrain_types(game_description, game_theme):
     terrain_instruction = (
         "You are a game design assistant helping to identify appropriate textures for a top-down game.\n"
         "Given a game description and theme, identify exactly 3 distinct texture types that would be suitable for the game.\n"
-        "For each texture, determine if it should be used as a ground (basic walkable surface), path (special surface), or wall (vertical/blocking element).\n"
+        "For each texture, determine if it should be used as:\n"
+        "- 'base_ground': A minimal, uniform ground texture with no distinct features\n"
+        "- 'detailed_ground': A ground texture with 2-3 clear but subtle features\n"
+        "- 'path': A special walkable surface with distinct patterns\n"
+        "- 'wall': A vertical/blocking element with prominent surface details\n"
         "Return your answer as a JSON array of objects, with each object containing:\n"
         "- 'name': A concise texture description IN SINGULAR FORM (not plural)\n"
-        "- 'type': Either 'ground', 'path', or 'wall'\n"
+        "- 'type': Either 'base_ground', 'detailed_ground', 'path', or 'wall'\n"
         "- 'purpose': Brief explanation of its role in the game\n\n"
         "IMPORTANT RULES:\n"
         "1. Focus ONLY on textures with FEW, LARGE elements - these are BACKGROUND tiles\n"
@@ -463,12 +467,15 @@ def identify_terrain_types(game_description, game_theme):
         "4. Keep texture names simple, focusing on a few key oversized elements\n"
         "5. These will be used as BACKGROUND tiles that other game elements will be placed on top of\n"
         "6. Textures MUST be designed for TRULY SEAMLESS tiling with NO BORDERS or EDGES\n"
-        "7. ALWAYS USE SINGULAR FORM, not plural\n\n"
+        "7. ALWAYS USE SINGULAR FORM, not plural\n"
+        "8. For ground types:\n"
+        "   - base_ground: Use for large, uniform areas with no distinct features\n"
+        "   - detailed_ground: Use for areas that need subtle features but remain walkable\n\n"
         "Example response for a fantasy RPG:\n"
         "[\n"
         "    {\n"
         "        \"name\": \"worn stone block\",\n"
-        "        \"type\": \"ground\",\n"
+        "        \"type\": \"base_ground\",\n"
         "        \"purpose\": \"Basic walkable dungeon floor\"\n"
         "    },\n"
         "    {\n"
@@ -516,7 +523,7 @@ def identify_terrain_types(game_description, game_theme):
             raise TypeError(f"Expected terrain to be a dictionary, got {type(terrain)}")
         if 'name' not in terrain or 'type' not in terrain:
             raise ValueError(f"Terrain missing required fields: {terrain}")
-        if terrain['type'] not in ['ground', 'path', 'wall']:
+        if terrain['type'] not in ['base_ground', 'detailed_ground', 'path', 'wall']:
             raise ValueError(f"Invalid terrain type '{terrain['type']}' in {terrain}")
     
     # Take exactly 3 terrain types
