@@ -42,85 +42,137 @@ def generate_structured_tile_prompt(base_terrain, tile_type="ground"):
     """
     # Define complexity levels for different tile types
     tile_instructions = {
-        "ground": {
+        "base_ground": {
             "description": (
-                "You are designing an extremely subtle and simple ground texture tile for a top-down game.\n"
+                "You are designing an EXTREMELY minimal ground texture tile for a top-down game.\n"
                 "Given a terrain type, return the following JSON with NATURAL descriptions:\n"
                 "{\n"
-                "  'tile_subject': 'basic ground type (2-3 words)',\n"
-                "  'tile_contents': 'description of minimal scattered details',\n"
-                "  'color_palette': 'base color with very subtle variations'\n"
+                "  'tile_subject': 'flat/simple terrain (2 words max)',\n"
+                "  'tile_contents': 'minimal texture (3 words max)',\n"
+                "  'color_palette': 'base tone (2-3 words max)'\n"
                 "}\n"
                 "CRITICAL RULES:\n"
-                "1. Focus on EXTREMELY subtle, natural ground textures\n"
-                "2. Details must be VERY sparse and barely noticeable\n"
-                "3. Use minimal color variation from base color\n"
-                "4. NO distinct shapes or patterns\n"
-                "5. Think background texture, not features\n"
+                "1. MUST use one of these words: 'flat', 'minimal', 'simple'\n"
+                "2. NO use of: light, dark, shadow, scattered, varied, detailed\n"
+                "3. Keep descriptions extremely short\n"
+                "4. NO patterns or distinct features\n"
+                "5. Think uniform base color only\n"
                 "6. NO borders or edges\n"
-                "7. Details should be extremely sparse\n\n"
+                "7. NO lighting effects\n\n"
+                "Example for 'sand':\n"
+                "{\n"
+                "  'tile_subject': 'flat sand',\n"
+                "  'tile_contents': 'minimal grain texture',\n"
+                "  'color_palette': 'warm beige'\n"
+                "}\n\n"
                 "Example for 'dirt':\n"
                 "{\n"
-                "  'tile_subject': 'bare earth surface',\n"
-                "  'tile_contents': 'tiny soil marks',\n"
-                "  'color_palette': 'earth brown with minimal variation'\n"
+                "  'tile_subject': 'simple soil',\n"
+                "  'tile_contents': 'flat earth texture',\n"
+                "  'color_palette': 'brown earth'\n"
+                "}"
+            )
+        },
+        "detailed_ground": {
+            "description": (
+                "You are designing a ground texture tile that extends the base ground with 2-3 clear features.\n"
+                "Given a terrain type, return the following JSON with NATURAL descriptions:\n"
+                "{\n"
+                "  'tile_subject': 'base ground with features (3-4 words)',\n"
+                "  'tile_contents': 'two or three clear features on the texture',\n"
+                "  'color_palette': 'base color plus accent colors'\n"
+                "}\n"
+                "CRITICAL RULES:\n"
+                "1. Start with the same minimal base texture\n"
+                "2. Add 2-3 clear features\n"
+                "3. Features must be distinct but not overwhelming\n"
+                "4. Consider feature types:\n"
+                "   - Natural: flowers, small rocks, roots\n"
+                "   - Tech: data nodes, power crystals, circuits\n"
+                "   - Magic: rune marks, mana crystals, glyphs\n"
+                "   - Decay: cracks, holes, burn marks\n"
+                "5. Feature placement:\n"
+                "   - Center-weighted\n"
+                "   - No edges or corners\n"
+                "   - Clear but not dominant\n"
+                "6. Color guidance:\n"
+                "   - Use same base color as ground\n"
+                "   - Add 1-2 accent colors for features\n"
+                "   - Keep contrast moderate\n\n"
+                "Example for 'grass':\n"
+                "{\n"
+                "  'tile_subject': 'grass with meadow details',\n"
+                "  'tile_contents': 'purple blooms and clover patches',\n"
+                "  'color_palette': 'green base with purple and white'\n"
+                "}\n\n"
+                "Example for 'tech floor':\n"
+                "{\n"
+                "  'tile_subject': 'metal floor with circuits',\n"
+                "  'tile_contents': 'data ports and power lines',\n"
+                "  'color_palette': 'gray base with blue and red'\n"
                 "}"
             )
         },
         "path": {
             "description": (
-                "You are designing a simple path material texture tile for a top-down game.\n"
+                "You are designing a path or walkable surface texture tile for a top-down game.\n"
                 "Given a terrain type, return the following JSON with NATURAL descriptions:\n"
                 "{\n"
-                "  'tile_subject': 'basic path material (2-3 words)',\n"
-                "  'tile_contents': 'description of visible material details',\n"
-                "  'color_palette': 'base color with moderate variations'\n"
+                "  'tile_subject': 'material type (2-3 words, NO path/walkway/surface)',\n"
+                "  'tile_contents': 'description of surface details and patterns',\n"
+                "  'color_palette': 'base color with appropriate variations'\n"
                 "}\n"
                 "CRITICAL RULES:\n"
-                "1. Focus on the actual path MATERIAL texture (dirt, stone, etc)\n"
-                "2. Details should be material-specific and evenly distributed\n"
-                "3. Use moderate color variation within the material theme\n"
-                "4. Simple material patterns allowed but keep them natural\n"
-                "5. Think close-up ground material texture\n"
+                "1. Focus on the material's texture and pattern\n"
+                "2. Details should reflect the material's natural characteristics\n"
+                "3. Use appropriate color variation for the material type\n"
+                "4. Consider the material's condition and age\n"
+                "5. Think close-up material texture\n"
                 "6. NO borders or edges\n"
-                "7. Must fill entire frame with the material\n\n"
-                "Example for 'stone':\n"
-                "{\n"
-                "  'tile_subject': 'packed gravel surface',\n"
-                "  'tile_contents': 'small embedded stones',\n"
-                "  'color_palette': 'gray stone with earth tones'\n"
-                "}"
+                "7. Must fill entire frame with the material\n"
+                "8. Consider various materials:\n"
+                "   - Natural (dirt, gravel, sand)\n"
+                "   - Stone (cobblestone, flagstone)\n"
+                "   - Wood (planks, boards)\n"
+                "   - Constructed (pavement, grates, tiles)\n"
+                "9. Each material should have appropriate details:\n"
+                "   - Natural: erosion, scattered debris\n"
+                "   - Stone: individual stones, gaps\n"
+                "   - Wood: grain patterns, knots\n"
+                "   - Constructed: seams, patterns, texture\n"
+                "10. Consider material conditions:\n"
+                "    - New: clean, uniform\n"
+                "    - Worn: use patterns, subtle damage\n"
+                "    - Damaged: cracks, missing pieces\n"
+                "    - Aged: weathering, discoloration\n"
             )
         },
         "wall": {
             "description": (
-                "You are designing a ZOOMED-IN wall texture tile for a top-down game.\n"
+                "You are designing a ZOOMED-IN obstacle or barrier texture tile for a top-down game.\n"
                 "Given a terrain type, return the following JSON with NATURAL descriptions:\n"
                 "{\n"
-                "  'tile_subject': 'detailed wall type (2-3 words)',\n"
+                "  'tile_subject': 'detailed obstacle type (2-3 words)',\n"
                 "  'tile_contents': 'description of prominent surface details',\n"
                 "  'color_palette': 'base color with rich variations'\n"
                 "}\n"
                 "CRITICAL RULES:\n"
-                "1. Focus on EXTREME CLOSE-UP of just 1-2 massive stones\n"
-                "2. Each stone should take up nearly half the frame\n"
+                "1. Focus on EXTREME CLOSE-UP of the obstacle's surface\n"
+                "2. The obstacle should take up most of the frame\n"
                 "3. Use rich color variation within theme\n"
-                "4. Think ZOOMED IN view of individual blocks\n"
-                "5. This is NOT a full wall pattern - just huge pieces\n"
+                "4. Think ZOOMED IN view of the obstacle's texture\n"
+                "5. This is NOT a full pattern - just the detailed surface\n"
                 "6. NO borders or edges\n"
-                "7. NO small details or mortar lines\n\n"
-                "Example for 'stone':\n"
-                "{\n"
-                "  'tile_subject': 'giant stone block',\n"
-                "  'tile_contents': 'massive weathered surface',\n"
-                "  'color_palette': 'gray stone with deep shadows'\n"
-                "}\n\n"
-                "Example for 'grass':\n"
-                "{\n"
-                "  'tile_subject': 'huge mossy block',\n"
-                "  'tile_contents': 'massive stone with grass patches',\n"
-                "  'color_palette': 'weathered stone with green growth'\n"
-                "}"
+                "7. Consider various types of obstacles:\n"
+                "   - Natural barriers (fallen logs, boulders, rock formations)\n"
+                "   - Constructed walls (stone, brick, wooden)\n"
+                "   - Environmental obstacles (thick bushes, dense vegetation)\n"
+                "   - Man-made barriers (ruined structures, debris)\n"
+                "8. Each obstacle type should have appropriate texture details:\n"
+                "   - Wood: grain patterns, knots, weathering\n"
+                "   - Stone: cracks, mineral variations, erosion\n"
+                "   - Vegetation: leaf patterns, bark texture, moss\n"
+                "   - Metal: rust, dents, scratches\n"
             )
         }
     }
@@ -142,10 +194,15 @@ def generate_structured_tile_prompt(base_terrain, tile_type="ground"):
 
     try:
         content = response.content[0].text.strip()
-        tile_data = json.loads(content.replace("'", '"'))
+        # Clean up the JSON string more thoroughly
+        content = content.replace("'", '"').replace('\n', ' ').strip()
+        # Remove any extra whitespace between JSON elements
+        content = ' '.join(content.split())
+        tile_data = json.loads(content)
         return tile_data
     except Exception as e:
         print("Failed to parse tile data:", e)
+        print("Raw content:", content)
         return None
 
 def build_final_tile_prompt(tile_subject, tile_contents, color_palette, tile_type="ground"):
@@ -160,7 +217,7 @@ def build_final_tile_prompt(tile_subject, tile_contents, color_palette, tile_typ
     """
     # Define complexity levels for different tile types
     prompt_templates = {
-        "ground": {
+        "base_ground": {
             "detail_level": "extremely subtle and minimal",
             "requirements": [
                 "The base texture must be VERY subtle and natural-looking",
@@ -168,6 +225,16 @@ def build_final_tile_prompt(tile_subject, tile_contents, color_palette, tile_typ
                 "NO distinct shapes or patterns whatsoever",
                 "Texture should be almost imperceptible at edges",
                 "Think flat, background texture only"
+            ]
+        },
+        "detailed_ground": {
+            "detail_level": "subtle with minimal detail",
+            "requirements": [
+                "The base texture must be subtle and natural-looking",
+                "Details should be very sparse and tiny",
+                "Keep patterns extremely minimal",
+                "Texture should blend seamlessly at edges",
+                "Think background texture with very light features"
             ]
         },
         "path": {
@@ -181,21 +248,21 @@ def build_final_tile_prompt(tile_subject, tile_contents, color_palette, tile_typ
             ]
         },
         "wall": {
-            "detail_level": "massive and zoomed-in",
+            "detail_level": "detailed and prominent",
             "requirements": [
-                "The texture must show just 1-2 HUGE stone blocks",
-                "Each block should take up nearly half the frame",
-                "Think extreme close-up of individual stones",
-                "This is NOT a full wall pattern",
-                "Focus on massive individual elements only"
+                "Show a zoomed-in view of the obstacle's surface texture",
+                "Focus on natural material details and patterns",
+                "Capture the material's characteristic features",
+                "Ensure the texture fills the entire frame",
+                "Keep the view close-up for rich detail"
             ]
         }
     }
 
     # Get the appropriate template
     if tile_type not in prompt_templates:
-        print(f"Warning: Unknown tile type '{tile_type}', defaulting to 'ground'")
-        tile_type = "ground"
+        print(f"Warning: Unknown tile type '{tile_type}', defaulting to 'base_ground'")
+        tile_type = "base_ground"
     
     template = prompt_templates[tile_type]
     
@@ -304,8 +371,11 @@ def generate_texture_from_theme(theme, tile_type="ground", seed=None):
     if not tile_data:
         return None
         
-    # Skip validation for path tiles, only validate ground and wall
-    if tile_type != "path" and not validate_tile_description(tile_data, tile_type):
+    # Skip validation for path and wall tiles
+    if tile_type in ["path", "wall"]:
+        # Skip validation entirely for these types
+        pass
+    elif not validate_tile_description(tile_data, tile_type):
         print("Generated description too complex for tile type, retrying...")
         return generate_texture_from_theme(theme, tile_type, seed)
 
@@ -511,67 +581,85 @@ def generate_terrains_for_game(game_description, game_theme, method="advanced", 
     
     return output_files, descriptions
 
-def validate_tile_description(tile_data, tile_type="ground"):
+def validate_tile_description(tile_data, tile_type="base_ground"):
     """
     Validate that the tile description meets complexity requirements for the given tile type.
     
     Args:
         tile_data: Dictionary containing tile description components
-        tile_type: Type of tile ('ground', 'path', or 'wall')
+        tile_type: Type of tile ('base_ground', 'detailed_ground', 'path', or 'wall')
     """
     # Define complexity limits for different tile types
     complexity_limits = {
-        "ground": {
+        "base_ground": {
             "subject_words": 3,
             "contents_words": 4,
-            "color_words": 2,
-            "forbidden_words": ['detailed', 'pattern', 'complex', 'intricate', 'varied'],
-            "allowed_words": ['subtle', 'minimal', 'simple', 'bare']
+            "color_words": 3,
+            "forbidden_words": ['detailed', 'pattern', 'complex', 'shadow', 'dark', 'light', 'varied'],
+            "allowed_words": ['flat', 'minimal', 'simple', 'uniform', 'fine'],
+            "required_words": ['flat', 'minimal', 'simple']  # Must have at least one of these
+        },
+        "detailed_ground": {
+            "subject_words": 5,
+            "contents_words": 6,     # Allow for describing multiple features
+            "color_words": 5,        # Allow for multiple accent colors
+            "forbidden_words": ['complex', 'intricate', 'dense', 'packed', 'many'],  # Prevent overcrowding
+            "allowed_words": ['clear', 'distinct', 'visible', 'balanced'],  # Focus on clarity
+            "required_words": []  # No specific required words
         },
         "path": {
             "subject_words": 4,
-            "contents_words": 5,
-            "color_words": 4,
-            "forbidden_words": ['complex', 'intricate', 'ornate', 'scene', 'view'],
-            "allowed_words": ['packed', 'worn', 'weathered', 'basic', 'surface', 'material']
-        },
-        "wall": {
-            "subject_words": 5,
             "contents_words": 6,
             "color_words": 4,
-            "forbidden_words": ['subtle', 'minimal', 'bare'],
-            "allowed_words": ['detailed', 'structured', 'defined', 'prominent']
+            "forbidden_words": ['complex', 'intricate', 'ornate', 'scene', 'view'],
+            "allowed_words": ['packed', 'worn', 'weathered', 'basic', 'surface', 'material'],
+            "required_words": []
+        },
+        "wall": {
+            "subject_words": 8,
+            "contents_words": 10,
+            "color_words": 6,
+            "forbidden_words": [],
+            "allowed_words": [],
+            "required_words": []
         }
     }
     
     # Get appropriate limits
     if tile_type not in complexity_limits:
-        print(f"Warning: Unknown tile type '{tile_type}', defaulting to 'ground'")
-        tile_type = "ground"
+        print(f"Error: Unknown tile type '{tile_type}'")
+        return False
     
     limits = complexity_limits[tile_type]
     
     # Check word counts
     if len(tile_data['tile_subject'].split()) > limits["subject_words"]:
+        print(f"Subject too long: {tile_data['tile_subject']}")
         return False
     if len(tile_data['tile_contents'].split()) > limits["contents_words"]:
+        print(f"Contents too long: {tile_data['tile_contents']}")
         return False
         
     # Check for forbidden words based on tile type
     description_text = ' '.join(tile_data.values()).lower()
     if any(word in description_text for word in limits["forbidden_words"]):
+        forbidden = [word for word in limits["forbidden_words"] if word in description_text]
+        print(f"Found forbidden words: {forbidden}")
         return False
             
-    # For ground tiles, ensure at least one allowed word is present
-    if tile_type == "ground" and not any(word in description_text for word in limits["allowed_words"]):
+    # Check for required words if any
+    if limits["required_words"] and not any(word in description_text for word in limits["required_words"]):
+        print(f"Missing required words, needs one of: {limits['required_words']}")
         return False
             
     # Check color count
-    color_words = tile_data['color_palette'].lower().count('shade') + \
-                  tile_data['color_palette'].lower().count('color') + \
-                  tile_data['color_palette'].lower().count('variation')
-    if color_words > limits["color_words"]:
-        return False
+    if tile_type != "wall":  # Skip for wall tiles
+        color_words = tile_data['color_palette'].lower().count('shade') + \
+                    tile_data['color_palette'].lower().count('color') + \
+                    tile_data['color_palette'].lower().count('variation')
+        if color_words > limits["color_words"]:
+            print(f"Too many color words: {color_words} > {limits['color_words']}")
+            return False
         
     return True
 
@@ -582,7 +670,7 @@ def main():
     # Subparser for single terrain generation
     terrain_parser = subparsers.add_parser("terrain", help="Generate a single terrain tile")
     terrain_parser.add_argument("terrain_type", help="The terrain type to generate (e.g., 'forest', 'desert')")
-    terrain_parser.add_argument("--tile-type", choices=["ground", "path", "wall"], default="ground",
+    terrain_parser.add_argument("--tile-type", choices=["base_ground", "detailed_ground", "path", "wall"], default="base_ground",
                                help="Type of tile to generate (affects detail level)")
     terrain_parser.add_argument("--output", default=None, help="Output filename (default: terrain_type_tile.webp)")
     terrain_parser.add_argument("--no-pixel-art", action="store_true", help="Skip pixel art generation")

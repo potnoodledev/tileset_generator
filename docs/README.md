@@ -21,6 +21,37 @@ tileset_generator/
 └── docs/                  # Documentation
 ```
 
+## Examples
+
+### Generated Base Textures
+Here are some examples of AI-generated base textures:
+
+| Ground Textures | Wall Textures |
+|----------------|---------------|
+| ![Grass Ground](../readme_examples/generated_tiles/grass_base_ground_tile.webp) | ![Crystal Wall](../readme_examples/generated_tiles/crystal_formation_wall_tile.webp) |
+| ![Void Ground](../readme_examples/generated_tiles/void_ground_detailed_ground_tile.webp) | ![Energy Barrier](../readme_examples/generated_tiles/energy_barrier_wall_tile.webp) |
+| ![Tech Floor](../readme_examples/generated_tiles/tech_floor_detailed_ground_tile.webp) | |
+
+### Pixelated Examples
+Examples of different textures after pixel art processing (32x32):
+
+| | | |
+|:---:|:---:|:---:|
+| ![Ancient Ruins](../readme_examples/generated_tiles/pixelated_examples/ancient_ruins_wall_32x32_processed.png)<br>Ancient Ruins | ![Crystal Ground](../readme_examples/generated_tiles/pixelated_examples/crystal_ground_detailed_ground_32x32_processed.png)<br>Crystal Ground | ![Metal Grate](../readme_examples/generated_tiles/pixelated_examples/metal_grate_path_32x32_processed.png)<br>Metal Grate |
+| ![Wooden Boardwalk](../readme_examples/generated_tiles/pixelated_examples/wooden_boardwalk_path_32x32_processed.png)<br>Wooden Boardwalk | | |
+
+### Blended Tileset Examples
+Examples of generated tilesets showing transitions between different textures:
+
+#### Grass Ground to Cobblestone Path (8x8)
+![Grass to Cobblestone](../readme_examples/outputted_tilesets/pixelated/grass%20ground_cobblestone%20path_blend_pixelated/left_border_grass%20ground_cobblestone%20path_blend_8x8_processed.png)
+
+#### Tech Floor to Energy Barrier (8x8)
+![Tech to Energy](../readme_examples/outputted_tilesets/pixelated/tech%20floor_energy%20barrier_blend_pixelated/4_corners_tech%20floor_energy%20barrier_blend_8x8_processed.png)
+
+#### Void Ground to Crystal Wall (8x8)
+![Void to Crystal](../readme_examples/outputted_tilesets/pixelated/void%20ground_crystal%20wall_blend_pixelated/left_corner_inside_void%20ground_crystal%20wall_blend_8x8_processed.png)
+
 ## Prerequisites
 
 Before setting up the project, you'll need:
@@ -125,58 +156,3 @@ Example:
 # Generate a cyberpunk tileset with small pixels
 python src/tileset_generator.py blend output/base_textures/cyber_ground.webp output/base_textures/cyber_wall.webp masks --pixelate --pixel-size small --method advanced --theme-name cyber_blend
 ```
-
-### 3. Generate Complete Background Tilesets
-```bash
-# Using command line arguments
-python src/background_tileset_agent.py --description "Your game description" --theme "your game theme"
-
-# Using JSON configuration
-python src/background_tileset_agent.py --config config/game_template.json
-```
-
-The background tileset agent automates the entire process by:
-1. Generating base textures based on game description
-2. Creating all necessary tile transitions
-3. Applying pixelation and processing
-
-#### JSON Configuration
-Create a game template in `config/game_template.json`:
-```json
-{
-    "game_description": "A dark cyberpunk game set in a neon-lit industrial complex with high-tech machinery and worn metal surfaces",
-    "game_theme": "cyberpunk industrial"
-}
-```
-
-#### Options
-- `--config`: Path to game configuration JSON file
-- `--description`: Game description (when not using config file)
-- `--theme`: Game theme (required with --description)
-- `--mask-dir`: Directory containing mask images (default: masks)
-
-## Output Directories
-
-- `outputted_tilesets/`: Main output directory for generated tilesets
-  - `highres/`: High-resolution versions of the tiles
-  - `final_tileset/`: Final processed tiles
-  - `pixelated/`: Pixelated versions of the tiles
-  - `temp/`: Temporary files used during generation
-
-## Features
-
-- AI-powered texture generation and blending
-- Seamless tile transitions
-- Multiple pixelation methods and sizes
-- Support for various texture types (ground, path, wall)
-- Color harmonization and quantization
-- Customizable transition effects
-- Support for batch processing with mask directories
-
-## Tips
-
-1. Start with generating base textures using `generate_base_tiles.py`
-2. Use the generated textures with `tileset_generator.py` to create complete tilesets
-3. Experiment with different pixelation settings for desired aesthetic
-4. Use the `blend` command for specialized transitions between textures
-5. Check the `masks/` directory for available transition patterns

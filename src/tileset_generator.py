@@ -980,10 +980,7 @@ def blend_textures(texture1_path, texture2_path, mask_dir,
 
 def generate_transition_prompt(texture1_name, texture2_name):
     """
-    Generate a specialized transition prompt between two textures.
-    
-    If Anthropic API is available, uses Claude to generate a custom prompt.
-    Otherwise, raises an error (except for stone-grass special case).
+    Generate a specialized transition prompt between two textures using Claude.
     
     Args:
         texture1_name: Name of the first texture
@@ -993,55 +990,77 @@ def generate_transition_prompt(texture1_name, texture2_name):
         A detailed prompt for image generation
         
     Raises:
-        RuntimeError: If Anthropic API is not available for non-special case prompts
+        RuntimeError: If Anthropic API is not available
     """
-    # Check if we have special cases
-    if ("stone" in texture1_name.lower() and "grass" in texture2_name.lower()) or \
-       ("grass" in texture1_name.lower() and "stone" in texture2_name.lower()):
-        # Return specialized stone-grass prompt
-        return (
-            f"Create a natural transition between {texture1_name} and {texture2_name}. "
-            f"The {texture1_name} areas should maintain large flat elements with minimal interruptions. "
-            f"The {texture2_name} area should have medium-sized elements with visible space between them. "
-            f"At the transition zone: "
-            f"1. Small elements of {texture2_name} growing between the gaps in {texture1_name} near the edge "
-            f"2. Scattered debris and soil accumulating at the edges "
-            f"3. Worn, weathered edges where textures meet "
-            f"4. Some small elements of {texture2_name} partially overlapping the {texture1_name} "
-            f"5. Gradual thinning of {texture2_name} as it approaches the {texture1_name} "
-            f"Create a photorealistic, seamless transition with natural colors. "
-            f"No blue, purple, or unnatural borders. "
-            f"Use only earthy tones - natural colors that match both textures. "
-            f"The transition should look completely natural, as if it formed over years of weather and use."
-        )
-    
-    # If Anthropic client is available, use it
     if anthropic_client:
         try:
             prompt_template = f"""
             You are a terrain texture expert. Create a detailed prompt for AI image generation to blend {texture1_name} and {texture2_name} textures seamlessly.
 
             Your response should follow this exact format:
-            1. One sentence: "Create a natural transition between [texture1] and [texture2]."
-            2. One sentence describing key visual characteristics of {texture1_name} to maintain.
-            3. One sentence describing key visual characteristics of {texture2_name} to maintain.
-            4. Five numbered points (1-5) describing specific transition effects at the boundary, including:
-               - How elements of {texture1_name} gradually change into {texture2_name}
-               - Natural weathering or interaction effects between the textures
-               - Small details that make the transition realistic (debris, partial elements, etc.)
-               - How colors and textures blend at the boundary
-               - How shadows or lighting would naturally occur at this transition
-            5. Two sentences on maintaining photorealism and seamlessness.
-            6. One sentence prohibiting unnatural artifacts (blue borders, sharp edges, etc.)
-            7. One sentence specifying the color palette to use (based on the natural colors of both textures).
-            8. One final sentence emphasizing the transition should look natural and weathered.
 
-            Return ONLY the formatted prompt text without explanations, introductions or quotation marks.
+            TRANSITION STRUCTURE (30% of total width):
+            1. "Create a precise transition between {texture1_name} and {texture2_name} with the following progression:"
+               - First 35%: Pure {texture1_name} texture
+               - Middle 30%: Graduated transition zone
+               - Final 35%: Pure {texture2_name} texture
+
+            TEXTURE CHARACTERISTICS:
+            2. Three specific visual elements of {texture1_name} that must be preserved:
+               - Core texture pattern
+               - Material properties (roughness, reflectivity, density)
+               - Characteristic features (cracks, grain, etc.)
+
+            3. Three specific visual elements of {texture2_name} that must be preserved:
+               - Core texture pattern
+               - Material properties (roughness, reflectivity, density)
+               - Characteristic features (cracks, grain, etc.)
+
+            TRANSITION MECHANICS:
+            4. Five precise transition effects at the boundary:
+               a) First 10% of transition: 90% {texture1_name}/10% {texture2_name} with subtle elements emerging
+               b) Next 10%: 60% {texture1_name}/40% {texture2_name} with clear material interaction
+               c) Middle 10%: Perfect 50/50 blend with both textures clearly visible
+               d) Next 10%: 40% {texture1_name}/60% {texture2_name} with {texture1_name} receding
+               e) Final 10%: 10% {texture1_name}/90% {texture2_name} with only traces remaining
+
+            TECHNICAL REQUIREMENTS:
+            5. Specify exact technical parameters:
+               - Match pixel density across the entire transition
+               - Maintain consistent noise levels throughout
+               - Preserve tileable edges on all sides
+               - Keep contrast ratios within 10% variance
+               - Use only colors present in source textures
+
+            MATERIAL INTERACTION:
+            6. Describe how the materials physically interact:
+               - Natural weathering patterns
+               - Material mixing behavior
+               - Physical properties at boundaries
+               - Surface tension effects
+               - Erosion characteristics
+
+            LIGHTING AND SHADOWS:
+            7. Define precise lighting behavior:
+               - Consistent light direction across transition
+               - Shadow continuity between textures
+               - Unified ambient occlusion
+               - Matching highlight intensity
+               - Coherent reflective properties
+
+            COLOR REQUIREMENTS:
+            8. Strict color guidelines:
+               - Use only colors from source textures
+               - No new hues may be introduced
+               - Maintain source material color ratios
+               - Blend existing colors naturally
+               - Preserve original material albedo
+
+            Return ONLY the formatted prompt text without explanations or quotation marks.
             """
             
             print(f"Generating specialized prompt for {texture1_name}-{texture2_name} transition using Claude...")
             
-            # Call Claude with the template
             response = anthropic_client.messages.create(
                 model="claude-3-sonnet-20240229",
                 max_tokens=1000,
@@ -1050,14 +1069,12 @@ def generate_transition_prompt(texture1_name, texture2_name):
                 messages=[{"role": "user", "content": prompt_template}]
             )
             
-            # Extract the generated text from the response
             return response.content[0].text
             
         except Exception as e:
             print(f"Error generating prompt with Anthropic: {e}")
             raise RuntimeError(f"Failed to generate AI prompt using Anthropic API: {e}")
     
-    # No fallback template - raise error if we don't have Anthropic client
     raise RuntimeError("Anthropic API key not available. Please set ANTHROPIC_API_KEY in .env file to use dynamic prompt generation.")
 
 # Add a new command line option for specialized stone-grass blending
