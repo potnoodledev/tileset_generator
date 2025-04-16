@@ -28,29 +28,29 @@ Here are some examples of AI-generated base textures:
 
 | Ground Textures | Wall Textures |
 |----------------|---------------|
-| ![Grass Ground](../readme_examples/generated_tiles/grass_base_ground_tile.webp) | ![Crystal Wall](../readme_examples/generated_tiles/crystal_formation_wall_tile.webp) |
-| ![Void Ground](../readme_examples/generated_tiles/void_ground_detailed_ground_tile.webp) | ![Energy Barrier](../readme_examples/generated_tiles/energy_barrier_wall_tile.webp) |
-| ![Tech Floor](../readme_examples/generated_tiles/tech_floor_detailed_ground_tile.webp) | |
+| ![Grass Ground](./readme_examples/generated_tiles/grass_base_ground_tile.webp) | ![Crystal Wall](./readme_examples/generated_tiles/crystal_formation_wall_tile.webp) |
+| ![Void Ground](./readme_examples/generated_tiles/void_ground_detailed_ground_tile.webp) | ![Energy Barrier](./readme_examples/generated_tiles/energy_barrier_wall_tile.webp) |
+| ![Tech Floor](./readme_examples/generated_tiles/tech_floor_detailed_ground_tile.webp) | |
 
 ### Pixelated Examples
 Examples of different textures after pixel art processing (32x32):
 
 | | | |
 |:---:|:---:|:---:|
-| ![Ancient Ruins](../readme_examples/generated_tiles/pixelated_examples/ancient_ruins_wall_32x32_processed.png)<br>Ancient Ruins | ![Crystal Ground](../readme_examples/generated_tiles/pixelated_examples/crystal_ground_detailed_ground_32x32_processed.png)<br>Crystal Ground | ![Metal Grate](../readme_examples/generated_tiles/pixelated_examples/metal_grate_path_32x32_processed.png)<br>Metal Grate |
-| ![Wooden Boardwalk](../readme_examples/generated_tiles/pixelated_examples/wooden_boardwalk_path_32x32_processed.png)<br>Wooden Boardwalk | | |
+| ![Ancient Ruins](./readme_examples/generated_tiles/pixelated_examples/ancient_ruins_wall_32x32_processed.png)<br>Ancient Ruins | ![Crystal Ground](./readme_examples/generated_tiles/pixelated_examples/crystal_ground_detailed_ground_32x32_processed.png)<br>Crystal Ground | ![Metal Grate](./readme_examples/generated_tiles/pixelated_examples/metal_grate_path_32x32_processed.png)<br>Metal Grate |
+| ![Wooden Boardwalk](./readme_examples/generated_tiles/pixelated_examples/wooden_boardwalk_path_32x32_processed.png)<br>Wooden Boardwalk | | |
 
 ### Blended Tileset Examples
 Examples of generated tilesets showing transitions between different textures:
 
 #### Grass Ground to Cobblestone Path (8x8)
-![Grass to Cobblestone](../readme_examples/outputted_tilesets/pixelated/grass%20ground_cobblestone%20path_blend_pixelated/left_border_grass%20ground_cobblestone%20path_blend_8x8_processed.png)
+![Grass to Cobblestone](./readme_examples/outputted_tilesets/pixelated/grass%20ground_cobblestone%20path_blend_pixelated/left_border_grass%20ground_cobblestone%20path_blend_8x8_processed.png)
 
 #### Tech Floor to Energy Barrier (8x8)
-![Tech to Energy](../readme_examples/outputted_tilesets/pixelated/tech%20floor_energy%20barrier_blend_pixelated/4_corners_tech%20floor_energy%20barrier_blend_8x8_processed.png)
+![Tech to Energy](./readme_examples/outputted_tilesets/pixelated/tech%20floor_energy%20barrier_blend_pixelated/4_corners_tech%20floor_energy%20barrier_blend_8x8_processed.png)
 
 #### Void Ground to Crystal Wall (8x8)
-![Void to Crystal](../readme_examples/outputted_tilesets/pixelated/void%20ground_crystal%20wall_blend_pixelated/left_corner_inside_void%20ground_crystal%20wall_blend_8x8_processed.png)
+![Void to Crystal](./readme_examples/outputted_tilesets/pixelated/void%20ground_crystal%20wall_blend_pixelated/left_corner_inside_void%20ground_crystal%20wall_blend_8x8_processed.png)
 
 ## Prerequisites
 
