@@ -10,8 +10,14 @@ tileset_generator/
 │   ├── tileset_generator.py      # Main tileset generation tool
 │   ├── pixel_processor.py        # Pixel art processing
 │   ├── generate_base_tiles.py    # Base texture generation
+│   ├── full_map_generator.py     # Complete dungeon map generation
+│   ├── vibe_dungeon_viewer.py    # Interactive map viewer
 │   └── background_tileset_agent.py
 ├── masks/                  # Mask files for processing
+├── fullmap/                # Dungeon map files
+│   ├── floor.png           # Generated floor texture
+│   ├── wall.png            # Generated wall texture
+│   └── fullmap.png         # Map layout mask
 ├── outputted_tilesets/     # Generated tilesets
 ├── output/                 # Additional output files
 │   └── base_textures/     # Generated base textures
@@ -19,7 +25,21 @@ tileset_generator/
 │   ├── requirements.txt    # Python dependencies
 │   └── .env.example       # Example environment variables
 └── docs/                  # Documentation
+    ├── README.md          # This file
+    └── fullmap_readme.md  # Details on the map generator
 ```
+
+## Full Dungeon Map Generation
+
+In addition to individual tilesets, this project includes tools for generating complete dungeon maps:
+
+### Full Map Generator
+Blends floor and wall textures into a complete dungeon map based on a mask file.
+
+### Vibe Dungeon Viewer
+Interactive viewer with real-time generation of themed dungeon maps.
+
+For detailed information about these tools, see [Full Map Generator Documentation](./fullmap_readme.md).
 
 ## Examples
 
